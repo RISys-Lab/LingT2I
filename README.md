@@ -184,9 +184,6 @@ Additional evaluation modules include:
 - **third_party/**: AnyText, AnyText2, and EasyText implementations.
 - **assets/fonts/**: multilingual font resources.
 
-The detailed extraction mapping from TRIG is recorded in
-[MIGRATION.md](./MIGRATION.md).
-
 ## Acknowledgement
 
 Many thanks to the great works in multilingual image generation, including
@@ -201,3 +198,12 @@ Many thanks to the great works in multilingual image generation, including
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
 The LingT2I BibTeX entry will be added when the paper is released.
+
+~~~bibtex
+@inproceedings{lingt2i,
+  title={},
+  author={},
+  booktitle={},
+  year={}
+}
+~~~
