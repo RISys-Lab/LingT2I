@@ -203,10 +203,5 @@ Many thanks to the great works in multilingual image generation, including
 The LingT2I BibTeX entry will be added when the paper is released.
 
 ~~~bibtex
-@inproceedings{lingt2i,
-  title={},
-  author={},
-  booktitle={},
-  year={}
-}
+TBD
 ~~~
