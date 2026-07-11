@@ -9,7 +9,7 @@ import numpy as np
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-anytext_dir = os.path.join(ROOT_DIR, 'third_party', 'AnyText')
+anytext_dir = os.path.join(ROOT_DIR, 'lingt2i', 'third_party', 'AnyText')
 if anytext_dir not in sys.path:
     sys.path.insert(0, anytext_dir)
 print(f"Added AnyText directory to Python path: {anytext_dir}")
@@ -104,7 +104,7 @@ def main():
     
     # 保存当前工作目录
     original_cwd = os.getcwd()
-    anytext_dir = os.path.join(ROOT_DIR, 'third_party', 'AnyText')
+    anytext_dir = os.path.join(ROOT_DIR, 'lingt2i', 'third_party', 'AnyText')
     
     try:
         # 临时切换到 AnyText 目录，让 ModelScope 可以找到配置文件

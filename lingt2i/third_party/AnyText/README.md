@@ -42,41 +42,39 @@ AnyText/
 
 ## 使用方法
 
-### 1. 从 trig_multilingual 目录运行 anytext.py
+### 1. 从 LingT2I 根目录运行 benchmark 入口
 
-原始的 `anytext.py` 文件仍在 `/data/TRIG/trig_multilingual/` 目录中，可以正常运行：
+AnyText 的 benchmark 入口位于 `lingt2i/generation/anytext.py`：
 
 ```bash
-cd /data/TRIG/trig_multilingual
-python anytext.py --help
+cd /path/to/LingT2I
+python -m lingt2i.generation.anytext --help
 ```
 
 ### 2. 如果需要在 AnyText 目录中运行代码
 
-所有依赖模块都已经复制到这个目录中，字体路径也已经修正为相对路径 `../font/Arial_Unicode.ttf`。
+所有依赖模块都保留在这个目录中。字体通过 `font` 符号链接访问
+`assets/fonts/Arial_Unicode.ttf`。
 
 ## 路径修正
 
-已进行的路径修正：
-- `t3_dataset.py`: 字体路径改为 `../font/Arial_Unicode.ttf`
-- `dataset_util.py`: 字体路径改为 `../font/Arial_Unicode.ttf`  
-- `ldm/util.py`: 字体路径改为 `../font/Arial_Unicode.ttf`
+AnyText 位于 `lingt2i/third_party/AnyText/`，其 `font` 链接指向仓库统一的
+`assets/fonts/` 资源目录。
 
 ## 验证
 
 运行以下命令验证文件结构：
 
 ```bash
-cd /data/TRIG/trig_multilingual/AnyText
+cd /path/to/LingT2I/lingt2i/third_party/AnyText
 python simple_test.py          # 检查文件结构
 python test_basic_syntax.py    # 检查语法正确性
 ```
 
 ## 注意事项
 
-1. 原始文件保持不变，不会影响现有的工作流程
-2. 字体文件仍在 `/data/TRIG/trig_multilingual/font/` 目录中，通过相对路径访问
-3. 所有 Python 文件都通过了语法检查
-4. OCR 字典文件（`ppocr_keys_v1.txt`, `en_dict.txt`）已包含在内
+1. 外部实现代码集中放在 `lingt2i/third_party/`。
+2. 字体文件统一放在 `assets/fonts/`。
+3. OCR 字典文件（`ppocr_keys_v1.txt`, `en_dict.txt`）已包含在内。
 
 这样的组织结构使得 AnyText 相关的代码模块化且独立，同时保持了与原始代码的兼容性。

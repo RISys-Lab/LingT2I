@@ -1,6 +1,6 @@
 # LingT2I: On the Limitations of Cross-Lingual Consistency in Multilingual Text-to-Image Generation
 [![paper](https://img.shields.io/badge/Paper-Coming_Soon-b31b1b?logo=arxiv&logoColor=red)](#todo)
-[![Benchmark](https://img.shields.io/badge/Dataset-LingT2I-orange)](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual)
+[![Benchmark](https://img.shields.io/badge/Dataset-LingT2I-orange)](https://huggingface.co/datasets/RISys-Lab/LingT2I)
 
 A benchmark covering 10 widely used
 languages with 33K prompts, designed to evaluate cross-lingual
@@ -13,7 +13,7 @@ across evaluation dimensions.
 
 ### LingT2I Benchmark
 
-Load from [🤗 Hugging Face](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual).
+Load from [🤗 Hugging Face](https://huggingface.co/datasets/RISys-Lab/LingT2I).
 
 > [!NOTE]
 > Legacy JSON is still supported for reproducing earlier experiments. Parquet
@@ -23,11 +23,11 @@ Load from [🤗 Hugging Face](https://huggingface.co/datasets/RISys-Lab/TRIG-Mul
 from datasets import load_dataset
 
 ds_cg = load_dataset(
-    "RISys-Lab/TRIG-Multilingual",
+    "RISys-Lab/LingT2I",
     split="content_generation",
 )
 ds_tr = load_dataset(
-    "RISys-Lab/TRIG-Multilingual",
+    "RISys-Lab/LingT2I",
     split="text_rendering",
 )
 
@@ -86,7 +86,7 @@ Set up a YAML file in **configs/**:
 
 ~~~yaml
 name: "lingt2i-content"
-dataset_name: "RISys-Lab/TRIG-Multilingual"
+dataset_name: "RISys-Lab/LingT2I"
 split: "content_generation"
 start_idx: 0
 end_idx: 30000
@@ -130,7 +130,7 @@ python -m lingt2i.generation.easytext --max_samples 10
 ~~~
 
 AnyText, AnyText2, and EasyText implementations are kept under
-**third_party/**, while benchmark entry points remain under
+**lingt2i/third_party/**, while benchmark entry points remain under
 **lingt2i/generation/**.
 
 ### Content Evaluation
@@ -140,7 +140,7 @@ Use MetaCLIP2 to evaluate multilingual content alignment:
 ~~~bash
 python -m lingt2i.evaluation.metaclip2_score \
   --image_folder outputs/content_generation/zimage \
-  --dataset_name RISys-Lab/TRIG-Multilingual \
+  --dataset_name RISys-Lab/LingT2I \
   --split content_generation \
   --out_csv results/metaclip2_zimage.csv
 ~~~
@@ -152,7 +152,7 @@ Run OCR and text-rendering metrics:
 ~~~bash
 python -m lingt2i.evaluation.ocr \
   --model_path outputs/text_rendering/EasyText \
-  --dataset_name RISys-Lab/TRIG-Multilingual \
+  --dataset_name RISys-Lab/LingT2I \
   --split text_rendering \
   --ocr_mode gemini \
   --use_position \
@@ -184,7 +184,7 @@ Additional evaluation modules include:
 - **lingt2i/models/**: the copied text-to-image model layer shared with TRIG.
 - **lingt2i/analysis/**: dataset and result analysis helpers.
 - **lingt2i/tools/**: data-preparation and X2I projection utilities.
-- **third_party/**: AnyText, AnyText2, and EasyText implementations.
+- **lingt2i/third_party/**: AnyText, AnyText2, and EasyText implementations.
 - **assets/fonts/**: multilingual font resources.
 
 ## Acknowledgement

@@ -9,7 +9,7 @@ from PIL import Image
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-THIRD_PARTY_DIR = os.path.join(ROOT_DIR, "third_party")
+THIRD_PARTY_DIR = os.path.join(ROOT_DIR, "lingt2i", "third_party")
 if THIRD_PARTY_DIR not in sys.path:
     sys.path.insert(0, THIRD_PARTY_DIR)
 

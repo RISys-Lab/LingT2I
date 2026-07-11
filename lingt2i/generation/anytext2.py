@@ -9,7 +9,10 @@ from PIL import ImageColor
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-anytext2_dir = os.path.join(ROOT_DIR, 'third_party', 'AnyText2')
+THIRD_PARTY_DIR = os.path.join(ROOT_DIR, 'lingt2i', 'third_party')
+if THIRD_PARTY_DIR not in sys.path:
+    sys.path.insert(0, THIRD_PARTY_DIR)
+anytext2_dir = os.path.join(THIRD_PARTY_DIR, 'AnyText2')
 if anytext2_dir not in sys.path:
     sys.path.insert(0, anytext2_dir)
 
