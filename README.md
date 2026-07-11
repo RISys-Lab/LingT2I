@@ -6,12 +6,6 @@ LingT2I was initially developed inside the TRIG repository. Its multilingual
 data, generation, and evaluation pipeline now live here as an independent
 project, with the required shared infrastructure copied locally.
 
-## TODO
-
-1. [x] Release the LingT2I dataset.
-2. [x] Release the generation and evaluation pipeline.
-3. [x] Separate LingT2I from the original TRIG repository.
-4. [ ] Release the LingT2I paper.
 
 ## Quick Start
 
