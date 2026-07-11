@@ -4,7 +4,10 @@
 
 A benchmark covering 10 widely used
 languages with 33K prompts, designed to evaluate cross-lingual
-effects in both content generation and text rendering.
+effects in both content generation and text rendering. Building on
+this benchmark, we conduct a comprehensive cross-lingual analysis,
+uncovering linguistic inequality and language-dependent trade-offs
+across evaluation dimensions. 
 
 ## Quick Start
 
