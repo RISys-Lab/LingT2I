@@ -2,10 +2,6 @@
 [![paper](https://img.shields.io/badge/Paper-Coming_Soon-b31b1b?logo=arxiv&logoColor=red)](#todo)
 [![Benchmark](https://img.shields.io/badge/Dataset-LingT2I-orange)](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual)
 
-LingT2I was initially developed inside the TRIG repository. Its multilingual
-data, generation, and evaluation pipeline now live here as an independent
-project, with the required shared infrastructure copied locally.
-
 
 ## Quick Start
 
