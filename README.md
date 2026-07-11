@@ -2,6 +2,9 @@
 [![paper](https://img.shields.io/badge/Paper-Coming_Soon-b31b1b?logo=arxiv&logoColor=red)](#todo)
 [![Benchmark](https://img.shields.io/badge/Dataset-LingT2I-orange)](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual)
 
+A benchmark covering 10 widely used
+languages with 33K prompts, designed to evaluate cross-lingual
+effects in both content generation and text rendering.
 
 ## Quick Start
 
