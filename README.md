@@ -1,139 +1,216 @@
-# LingT2I
+# LingT2I: On the Limitations of Cross-Lingual Consistency in Multilingual Text-to-Image Generation
+[![paper](https://img.shields.io/badge/Paper-Coming_Soon-b31b1b?logo=arxiv&logoColor=red)](#todo)
+[![Benchmark](https://img.shields.io/badge/Dataset-LingT2I-orange)](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual)
 
-Generation and evaluation code for **LingT2I: On the Limitations of
-Cross-Lingual Consistency in Multilingual Text-to-Image Generation**.
+- **LingT2I: On the Limitations of Cross-Lingual Consistency in Multilingual Text-to-image Generation. (ACM MM 2026)**
+  For the LingT2I benchmark, please check this repository and [🤗 RISys-Lab/TRIG-Multilingual](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual).
 
-LingT2I is the multilingual benchmark that was originally developed inside
-the TRIG repository. This repository keeps LingT2I-specific code together and
-contains local copies of the small amount of TRIG infrastructure it still
-shares. The two projects therefore do not depend on each other's checkout.
+LingT2I was initially developed inside the TRIG repository. Its multilingual
+data, generation, and evaluation pipeline now live here as an independent
+project, with the required shared infrastructure copied locally.
 
-## Dataset
+## TODO
 
-The default dataset is
-[RISys-Lab/TRIG-Multilingual](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual).
-It contains two public splits:
+1. [x] Release the LingT2I dataset.
+2. [x] Release the generation and evaluation pipeline.
+3. [x] Separate LingT2I from the original TRIG repository.
+4. [ ] Release the LingT2I paper.
 
-- **content_generation**: multilingual prompts used to measure cross-lingual
-  content consistency.
-- **text_rendering**: multilingual text-rendering prompts with render text,
-  layout metadata, and an embedded condition image.
+## Quick Start
 
-Example:
+### LingT2I Benchmark
 
-    from datasets import load_dataset
+Load from [🤗 Hugging Face](https://huggingface.co/datasets/RISys-Lab/TRIG-Multilingual).
 
-    content = load_dataset(
-        "RISys-Lab/TRIG-Multilingual",
-        split="content_generation",
-    )
-    rendering = load_dataset(
-        "RISys-Lab/TRIG-Multilingual",
-        split="text_rendering",
-    )
+> [!NOTE]
+> Legacy JSON is still supported for reproducing earlier experiments. Parquet
+> splits from Hugging Face are the default data source.
 
-Legacy JSON inputs remain supported by the data helpers for reproducing older
-experiments.
+~~~python
+from datasets import load_dataset
 
-## Repository layout
+ds_cg = load_dataset(
+    "RISys-Lab/TRIG-Multilingual",
+    split="content_generation",
+)
+ds_tr = load_dataset(
+    "RISys-Lab/TRIG-Multilingual",
+    split="text_rendering",
+)
 
-- **configs/**: content-generation and local model-path configuration.
-- **lingt2i/data.py**: shared Hugging Face and legacy JSON loaders.
+sample_cg = ds_cg[0]
+sample_tr = ds_tr[0]
+
+print(sample_cg["prompt"])
+print(sample_cg["dimension"], sample_cg["lang"])
+
+print(sample_tr["prompt"])
+print(sample_tr["render_text"])
+print(sample_tr["condition_image"])
+~~~
+
+The benchmark contains two tasks:
+
+- **content_generation** evaluates cross-lingual consistency for multilingual
+  text-to-image prompts.
+- **text_rendering** evaluates multilingual rendering with render text, layout
+  metadata, and an embedded condition image.
+
+Content-generation scoring uses
+**lingt2i/evaluation/metaclip2_score.py**. Text-rendering evaluation uses
+**lingt2i/evaluation/ocr.py**.
+
+## Setup
+
+### Installation
+
+~~~bash
+conda create -n lingt2i python=3.10 -y
+conda activate lingt2i
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+pip install -r requirements.txt
+~~~
+
+For VLM-based evaluation, deploy an OpenAI-compatible endpoint with vLLM:
+
+~~~bash
+pip install accelerate
+pip install 'vllm>=0.7.2'
+
+vllm serve Qwen/Qwen2.5-VL-7B-Instruct \
+  --port 8000 \
+  --device cuda \
+  --host 0.0.0.0 \
+  --dtype bfloat16 \
+  --limit-mm-per-prompt image=5,video=5
+~~~
+
+Machine-specific model paths can be configured from
+**configs/local_models.env.example**.
+
+## Getting Started
+
+### Content Generation
+
+Set up a YAML file in **configs/**:
+
+~~~yaml
+name: "lingt2i-content"
+dataset_name: "RISys-Lab/TRIG-Multilingual"
+split: "content_generation"
+start_idx: 0
+end_idx: 30000
+output_dir: "outputs/content_generation"
+
+generation:
+  models: ["zimage"]
+~~~
+
+Run the shared content-generation pipeline:
+
+~~~bash
+python -m lingt2i.generation.content \
+  --config configs/content_generation.yaml
+~~~
+
+For the multilingual FLUX adapter:
+
+~~~bash
+python -m lingt2i.generation.pea
+~~~
+
+### Text Rendering Generation
+
+Prompt-only text-rendering models:
+
+~~~bash
+python -m lingt2i.generation.flux --start_idx 0 --end_idx 10
+python -m lingt2i.generation.qwen --start_idx 0 --end_idx 10
+python -m lingt2i.generation.seedream --start_idx 0 --end_idx 10
+python -m lingt2i.generation.nano --start_idx 0 --end_idx 10
+python -m lingt2i.generation.imagen4 --start_idx 0 --end_idx 10
+~~~
+
+Placement-aware text-rendering models:
+
+~~~bash
+python -m lingt2i.generation.anytext --max_samples 10
+python -m lingt2i.generation.anytext2
+python -m lingt2i.generation.easytext --max_samples 10
+~~~
+
+AnyText, AnyText2, and EasyText implementations are kept under
+**third_party/**, while benchmark entry points remain under
+**lingt2i/generation/**.
+
+### Content Evaluation
+
+Use MetaCLIP2 to evaluate multilingual content alignment:
+
+~~~bash
+python -m lingt2i.evaluation.metaclip2_score \
+  --image_folder outputs/content_generation/zimage \
+  --dataset_name RISys-Lab/TRIG-Multilingual \
+  --split content_generation \
+  --out_csv results/metaclip2_zimage.csv
+~~~
+
+### Text Rendering Evaluation
+
+Run OCR and text-rendering metrics:
+
+~~~bash
+python -m lingt2i.evaluation.ocr \
+  --model_path outputs/text_rendering/EasyText \
+  --dataset_name RISys-Lab/TRIG-Multilingual \
+  --split text_rendering \
+  --ocr_mode gemini \
+  --use_position \
+  --output_file results.json
+~~~
+
+The OCR output contains:
+
+- Character-level normalized edit distance.
+- Token-level normalized edit distance.
+- Exact sentence accuracy.
+- Word accuracy.
+- A combined average score.
+
+Additional evaluation modules include:
+
+- **demographic_bias.py** for demographic representation.
+- **cultural_bias.py** for culture-specific elements and bias.
+- **nsfw.py** for multilingual safety.
+- **trig_score.py** for multilingual TRIG dimension scoring.
+- **summary.py** for compact per-language OCR summaries.
+
+## Repository Structure
+
+- **configs/**: experiment and model-path configuration.
+- **lingt2i/data.py**: Hugging Face and legacy JSON data loaders.
 - **lingt2i/generation/**: content-generation and text-rendering entry points.
-- **lingt2i/evaluation/**: MetaCLIP2, OCR, bias, cultural-bias, safety, and
-  result-summary code.
-- **lingt2i/evaluation/ocr_support/**: OCR recognizer modules and language
-  dictionaries.
-- **lingt2i/models/**: a copied subset of the TRIG text-to-image model layer.
-- **lingt2i/analysis/**: dataset and result statistics.
-- **lingt2i/tools/**: text-rendering preparation and X2I projection utilities.
-- **third_party/**: vendored AnyText, AnyText2, and EasyText adapters.
+- **lingt2i/evaluation/**: content, OCR, bias, cultural, and safety evaluation.
+- **lingt2i/models/**: the copied text-to-image model layer shared with TRIG.
+- **lingt2i/analysis/**: dataset and result analysis helpers.
+- **lingt2i/tools/**: data-preparation and X2I projection utilities.
+- **third_party/**: AnyText, AnyText2, and EasyText implementations.
 - **assets/fonts/**: multilingual font resources.
-- **lingt2i/evaluation/legacy/**: older JSON/path-based scripts retained for
-  experiment provenance, but kept out of the primary pipeline.
 
-Large rebuttal material, generated images, model weights, and machine-local
-caches are intentionally excluded.
+The detailed extraction mapping from TRIG is recorded in
+[MIGRATION.md](./MIGRATION.md).
 
-## Content generation
+## Acknowledgement
 
-The former TRIG task name t2i_ml is represented directly by the
-content_generation split here.
+Many thanks to the great works in multilingual image generation, including
+[FLUX](https://huggingface.co/black-forest-labs/FLUX.1-dev),
+[Qwen-Image](https://huggingface.co/Qwen/Qwen-Image),
+[AnyText](https://github.com/tyxsspa/AnyText),
+[AnyText2](https://github.com/tyxsspa/AnyText2), and
+[EasyText](https://github.com/HiDream-ai/EasyText).
 
-Configuration:
+## Citation
 
-    name: "lingt2i-content"
-    dataset_name: "RISys-Lab/TRIG-Multilingual"
-    split: "content_generation"
-    start_idx: 0
-    end_idx: 30000
-    generation:
-      models: ["zimage"]
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
-Entry point:
-
-    python -m lingt2i.generation.content \
-      --config configs/content_generation.yaml
-
-The multilingual FLUX adapter also has a dedicated entry point:
-
-    python -m lingt2i.generation.pea
-
-## Text rendering
-
-Prompt-only model entry points:
-
-    python -m lingt2i.generation.flux --start_idx 0 --end_idx 10
-    python -m lingt2i.generation.qwen --start_idx 0 --end_idx 10
-    python -m lingt2i.generation.seedream --start_idx 0 --end_idx 10
-    python -m lingt2i.generation.nano --start_idx 0 --end_idx 10
-    python -m lingt2i.generation.imagen4 --start_idx 0 --end_idx 10
-
-Placement-aware model entry points:
-
-    python -m lingt2i.generation.anytext --max_samples 10
-    python -m lingt2i.generation.anytext2
-    python -m lingt2i.generation.easytext --max_samples 10
-
-AnyText, AnyText2, and EasyText implementation code lives under third_party;
-the benchmark-facing launchers remain under lingt2i/generation.
-
-## Evaluation
-
-Content similarity with MetaCLIP2:
-
-    python -m lingt2i.evaluation.metaclip2_score \
-      --image_folder outputs/content_generation/zimage \
-      --dataset_name RISys-Lab/TRIG-Multilingual \
-      --split content_generation \
-      --out_csv results/metaclip2_zimage.csv
-
-Text-rendering OCR:
-
-    python -m lingt2i.evaluation.ocr \
-      --model_path outputs/text_rendering/EasyText \
-      --dataset_name RISys-Lab/TRIG-Multilingual \
-      --split text_rendering \
-      --ocr_mode gemini \
-      --use_position \
-      --output_file results.json
-
-OCR results include character NED, token NED, exact sentence accuracy, word
-accuracy, and a combined average score. Use lingt2i/evaluation/summary.py to
-produce compact per-language summaries.
-
-Additional evaluation modules:
-
-- **demographic_bias.py**: demographic representation analysis.
-- **cultural_bias.py**: culture-specific element and bias analysis.
-- **nsfw.py**: multilingual safety analysis.
-- **trig_score.py**: the multilingual TRIG dimension score retained from the
-  shared evaluation toolkit.
-
-## Relationship to TRIG
-
-TRIG remains the repository for the ICCV 2025 trade-off benchmark covering
-text-to-image, image editing, and subject-driven generation. LingT2I is a
-separate multilingual follow-up benchmark. Shared data-loading, model, and
-metric logic is copied into this repository so future changes can evolve
-independently.
+The LingT2I BibTeX entry will be added when the paper is released.
