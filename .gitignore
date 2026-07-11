@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Local credentials and machine-specific model paths
+.env
+configs/local_models.env
+
+# Model weights, caches, generated images, and evaluation outputs
+/checkpoints/
+/models/
+/outputs/
+/results/
+/cache/
+*.ckpt
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Paper/rebuttal working material is maintained separately
+rebuttal/
+*.pdf

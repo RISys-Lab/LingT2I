@@ -1,0 +1,8 @@
+name: "lingt2i-content"
+dataset_name: "RISys-Lab/TRIG-Multilingual"
+split: "content_generation"
+start_idx: 0
+end_idx: 30000
+output_dir: "outputs/content_generation"
+generation:
+  models: ["zimage"]
