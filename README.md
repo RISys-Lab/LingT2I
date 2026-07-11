@@ -72,9 +72,6 @@ vllm serve Qwen/Qwen2.5-VL-7B-Instruct \
   --limit-mm-per-prompt image=5,video=5
 ~~~
 
-Machine-specific model paths can be configured from
-**configs/local_models.env.example**.
-
 ## Getting Started
 
 ### Content Generation
