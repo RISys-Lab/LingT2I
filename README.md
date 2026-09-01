@@ -1,5 +1,5 @@
 # LingT2I: On the Limitations of Cross-Lingual Consistency in Multilingual Text-to-Image Generation
-[![paper](https://img.shields.io/badge/Paper-Coming_Soon-b31b1b?logo=arxiv&logoColor=red)](#todo)
+[![paper](https://img.shields.io/badge/Paper-Coming_Soon-b31b1b?logo=arxiv&logoColor=red)](https://arxiv.org/abs/2608.11002)
 [![Benchmark](https://img.shields.io/badge/Dataset-LingT2I-orange)](https://huggingface.co/datasets/RISys-Lab/LingT2I)
 
 A benchmark covering 10 widely used
