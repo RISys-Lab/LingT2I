@@ -202,7 +202,7 @@ Many thanks to the great works in multilingual image generation, including
 
 The LingT2I BibTeX entry will be added when the paper is released.
 
-~bibtex
+```bibtex
 @misc{zhang2026limitationscrosslingualconsistencymultilingual,
       title={On the Limitations of Cross-Lingual Consistency in Multilingual Text-to-image Generation}, 
       author={Sicheng Zhang and Zhonghao Yan and Binzhu Xie and Shi Qiu and Muzammal Naseer and Naveed Akhtar and Mubarak Shah},
@@ -212,4 +212,4 @@ The LingT2I BibTeX entry will be added when the paper is released.
       primaryClass={cs.CL},
       url={https://arxiv.org/abs/2608.11002}, 
 }
-~
+```
